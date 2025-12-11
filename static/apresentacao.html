@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Beer Analytics - Classificação Inteligente de Cervejas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styleApres.css">
+    <style>
+        /* Estilos para o Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(242, 193, 78, 0.3);
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #F2C14E;
+            font-size: 40px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(242, 193, 78, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-title {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            font-size: 1.2rem;
+        }
+
+        /* Estilo para as imagens clicáveis */
+        .viz-image {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .viz-image:hover {
+            transform: scale(1.02);
+        }
+
+        .viz-image img {
+            transition: opacity 0.3s ease;
+        }
+
+        .viz-image:hover img {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Lightbox para as imagens -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" class="lightbox-content" src="" alt="">
+        <div id="lightbox-title" class="lightbox-title"></div>
+    </div>
+
+    <!-- HEADER -->
+    <!-- OPÇÃO MAIS SIMPLES - APENAS EMOJI -->
+    <header>
+        <div class="container">
+            <div class="header-flex">
+                <!-- LADO ESQUERDO -->
+                <div class="header-title">
+                    <!-- APENAS EMOJI DE CERVEJA -->
+                    <span style="font-size: 2rem;">🍺</span>
+                    <div>
+                        <h1>CervejaNegócios</h1>
+                        <p class="header-subtitle">Sistema Inteligente de Classificação de Cervejas</p>
+                    </div>
+                </div>
+
+                <!-- LADO DIREITO -->
+                <div class="header-action">
+                    <a href="classificador.html" class="btn-header">
+                        Acessar Sistema
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SEÇÃO 1 - APLICAÇÃO PRÁTICA NO MERCADO -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="section-header">
+                <h2>Machine Learning Aplicado ao Mercado Cervejeiro</h2>
+                <p>
+                    Este trabalho demonstra como algoritmos de aprendizado supervisionado podem transformar dados
+                    sensoriais em insights estratégicos para o mercado cervejeiro, classificando cervejas em categorias
+                    de qualidade para tomada de decisão empresarial.
+                </p>
+            </div>
+
+            <div class="content-cards">
+                <div class="card">
+                    <h3>Análise de Mercado Inteligente</h3>
+                    <p>
+                        Classificar cervejas como "Boa" ou "Ruim" permite que produtores identifiquem padrões de
+                        qualidade
+                        que realmente impactam a percepção do consumidor, otimizando processos de produção.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>Controle de Qualidade Objetivo</h3>
+                    <p>
+                        Substitui avaliações subjetivas por métricas baseadas em dados, criando padrões consistentes
+                        de qualidade que podem ser monitorados ao longo do tempo.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>Otimização de Portfólio</h3>
+                    <p>
+                        Empresas podem analisar seu portfólio completo de produtos, identificando quais linhas possuem
+                        maior potencial de mercado e quais necessitam de reformulação.
+                    </p>
+                </div>
+            </div>
+
+            <div class="business-benefits" style="margin-top: 50px;">
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <h3 style="color: #F2C14E; font-size: 1.8rem; margin-bottom: 10px;">
+                        Transformando Dados em Vantagem Competitiva
+                    </h3>
+                    <p style="color: rgba(255, 255, 255, 0.8); max-width: 700px; margin: 0 auto;">
+                        A classificação inteligente de cervejas gera impactos concretos em diferentes áreas do negócio
+                    </p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px;">
+                    <div style="text-align: center; padding: 25px;">
+                        <div style="width: 70px; height: 70px; margin: 0 auto 20px; background: rgba(242, 193, 78, 0.1); 
+                        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                        border: 2px solid rgba(242, 193, 78, 0.3);">
+                            <span style="font-size: 1.8rem; color: #F2C14E;">💰</span>
+                        </div>
+                        <h4 style="color: #F2C14E; margin-bottom: 15px; font-size: 1.2rem;">Eficiência Operacional</h4>
+                        <p style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; line-height: 1.6;">
+                            Redução de 15-25% nos custos com controle de qualidade e minimização de desperdícios
+                        </p>
+                    </div>
+
+                    <div style="text-align: center; padding: 25px;">
+                        <div style="width: 70px; height: 70px; margin: 0 auto 20px; background: rgba(242, 193, 78, 0.1); 
+                        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                        border: 2px solid rgba(242, 193, 78, 0.3);">
+                            <span style="font-size: 1.8rem; color: #F2C14E;">📊</span>
+                        </div>
+                        <h4 style="color: #F2C14E; margin-bottom: 15px; font-size: 1.2rem;">Tomada de Decisão</h4>
+                        <p style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; line-height: 1.6;">
+                            Insights baseados em dados para desenvolvimento de produtos e estratégias de mercado
+                        </p>
+                    </div>
+
+                    <div style="text-align: center; padding: 25px;">
+                        <div style="width: 70px; height: 70px; margin: 0 auto 20px; background: rgba(242, 193, 78, 0.1); 
+                        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                        border: 2px solid rgba(242, 193, 78, 0.3);">
+                            <span style="font-size: 1.8rem; color: #F2C14E;">🧠</span>
+                        </div>
+                        <h4 style="color: #F2C14E; margin-bottom: 15px; font-size: 1.2rem;">Inovação Contínua</h4>
+                        <p style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; line-height: 1.6;">
+                            Capacidade de testar e lançar novos produtos com maior precisão e menor risco
+                        </p>
+                    </div>
+
+                    <div style="text-align: center; padding: 25px;">
+                        <div style="width: 70px; height: 70px; margin: 0 auto 20px; background: rgba(242, 193, 78, 0.1); 
+                        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                        border: 2px solid rgba(242, 193, 78, 0.3);">
+                            <span style="font-size: 1.8rem; color: #F2C14E;">🎯</span>
+                        </div>
+                        <h4 style="color: #F2C14E; margin-bottom: 15px; font-size: 1.2rem;">Precisão de Mercado</h4>
+                        <p style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; line-height: 1.6;">
+                            Alinhamento perfeito entre características do produto e expectativas dos consumidores
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 2 - MODELOS E VISUALIZAÇÕES -->
+    <section class="section section-dark">
+        <div class="container">
+            <div class="section-header">
+                <h2>Modelagem Supervisionada e Visualizações</h2>
+                <p>
+                    Após o pré-processamento e normalização dos dados, diversos algoritmos supervisionados foram
+                    aplicados e comparados, sendo o Random Forest selecionado como modelo principal.
+                </p>
+            </div>
+
+            <div class="visualization-grid">
+                <div class="viz-card">
+                    <div class="viz-image" onclick="openLightbox(this)">
+                        <img src="../img/hist.png" alt="Histograma das Avaliações"
+                            data-title="Histograma - Distribuição das avaliações para cervejas Boas e Ruins">
+                    </div>
+                    <h3>Histograma</h3>
+                    <p>Distribuição das avaliações para cervejas Boas e Ruins</p>
+                </div>
+
+                <div class="viz-card">
+                    <div class="viz-image" onclick="openLightbox(this)">
+                        <img src="../img/scater.png" alt="Scatter Plot das Classes"
+                            data-title="Scatter Plot - Separação das classes com base nos atributos sensoriais">
+                    </div>
+                    <h3>Scatter Plot</h3>
+                    <p>Separação das classes com base nos atributos sensoriais</p>
+                </div>
+
+                <div class="viz-card">
+                    <div class="viz-image" onclick="openLightbox(this)">
+                        <img src="../img/PieChart.png" alt="Distribuição das Classes"
+                            data-title="Pie Chart - Proporção entre cervejas Boas e Ruins">
+                    </div>
+                    <h3>Pie Chart</h3>
+                    <p>Proporção entre cervejas Boas e Ruins</p>
+                </div>
+
+                <div class="viz-card">
+                    <div class="viz-image" onclick="openLightbox(this)">
+                        <img src="../img/CordenadasParal.png" alt="Coordenadas Paralelas"
+                            data-title="Coordenadas Paralelas - Visualização multidimensional dos atributos">
+                    </div>
+                    <h3>Coordenadas Paralelas</h3>
+                    <p>Visualização multidimensional dos atributos por categoria</p>
+                </div>
+            </div>
+
+            <h3>Desempenho dos Modelos</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Algoritmo</th>
+                        <th>Acurácia</th>
+                        <th>Kappa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Decision Tree</td>
+                        <td>88,9%</td>
+                        <td>0,65</td>
+                    </tr>
+                    <tr>
+                        <td>Random Forest</td>
+                        <td>90,2%</td>
+                        <td>0,68</td>
+                    </tr>
+                    <tr>
+                        <td>SVM</td>
+                        <td>90,1%</td>
+                        <td>0,679</td>
+                    </tr>
+                    <tr>
+                        <td>KNN</td>
+                        <td>89,6%</td>
+                        <td>0,661</td>
+                    </tr>
+                    <tr>
+                        <td>MLP</td>
+                        <td>90,2%</td>
+                        <td>0,679</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- SEÇÃO 3 - SISTEMA WEB -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="section-header">
+                <h2>Experimente o Sistema de Classificação de Cervejas</h2>
+                <p>
+                    O sistema web permite ao usuário inserir valores sensoriais normalizados e receber a classificação
+                    automática por meio de um modelo treinado em Machine Learning.
+                </p>
+            </div>
+
+            <div class="recommendation-section">
+                <a href="classificador.html" class="btn-recommendation">
+                    Acessar o Sistema de Classificação
+                </a>
+            </div>
+
+            <div class="content-cards">
+                <div class="card">
+                    <h3>Como Funciona</h3>
+                    <p>
+                        O modelo Random Forest, exportado em PMML, recebe os cinco atributos da cerveja e retorna
+                        automaticamente a classificação "Boa" ou "Ruim".
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>Aplicações Práticas</h3>
+                    <ul>
+                        <li>Avaliação rápida de novos lotes de produção</li>
+                        <li>Benchmark contra concorrentes</li>
+                        <li>Otimização de formulações de receitas</li>
+                        <li>Suporte a decisões de pricing estratégico</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>Trabalho Acadêmico de Aprendizado de Máquina • Classificação de Cervejas</p>
+        </div>
+    </footer>
+
+    <script>
+        // Função para abrir o lightbox
+        function openLightbox(element) {
+            const img = element.querySelector('img');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxTitle = document.getElementById('lightbox-title');
+
+            lightboxImg.src = img.src;
+            lightboxTitle.textContent = img.getAttribute('data-title') || img.alt;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Previne scroll
+        }
+
+        // Função para fechar o lightbox
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restaura scroll
+        }
+
+        // Fechar lightbox ao clicar fora da imagem
+        document.getElementById('lightbox').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+
+        // Fechar lightbox com tecla ESC
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
+        // Prevenir que o clique na imagem dentro do lightbox feche
+        document.getElementById('lightbox-img').addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+    </script>
+
+</body>
+
+</html>

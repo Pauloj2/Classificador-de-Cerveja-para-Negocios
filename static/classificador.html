@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classificador de Cervejas | ML System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍺 Classificador de Cervejas</h1>
+            <p>Sistema de Machine Learning para Análise de Qualidade</p>
+        </div>
+        <div class="business-bar">
+            <div>📈 IA para Decisão de Mercado</div>
+            <div>🍺 Qualidade • 💼 Negócios • 🧠 Machine Learning</div>
+        </div>
+
+
+        <div class="main-card">
+            <h2 class="card-title">Avaliação de Características</h2>
+
+            <form id="beerForm">
+                <div class="form-group">
+                    <label class="form-label">
+                        <span>🌸 Aroma</span>
+                        <span class="value-display" id="aromaValue">0.50</span>
+                    </label>
+                    <div class="slider-track">
+                        <input type="range" id="aroma" min="0" max="1" step="0.01" value="0.5">
+                        <div class="slider-markers">
+                            <span>0.0</span>
+                            <span>0.5</span>
+                            <span>1.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span>👁️ Aparência</span>
+                        <span class="value-display" id="appearanceValue">0.50</span>
+                    </label>
+                    <div class="slider-track">
+                        <input type="range" id="appearance" min="0" max="1" step="0.01" value="0.5">
+                        <div class="slider-markers">
+                            <span>0.0</span>
+                            <span>0.5</span>
+                            <span>1.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span>👅 Paladar</span>
+                        <span class="value-display" id="palateValue">0.50</span>
+                    </label>
+                    <div class="slider-track">
+                        <input type="range" id="palate" min="0" max="1" step="0.01" value="0.5">
+                        <div class="slider-markers">
+                            <span>0.0</span>
+                            <span>0.5</span>
+                            <span>1.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span>😋 Sabor</span>
+                        <span class="value-display" id="tasteValue">0.50</span>
+                    </label>
+                    <div class="slider-track">
+                        <input type="range" id="taste" min="0" max="1" step="0.01" value="0.5">
+                        <div class="slider-markers">
+                            <span>0.0</span>
+                            <span>0.5</span>
+                            <span>1.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span>🔥 Teor Alcoólico (ABV)</span>
+                        <span class="value-display" id="abvValue">0.50</span>
+                    </label>
+                    <div class="slider-track">
+                        <input type="range" id="abv" min="0" max="1" step="0.01" value="0.5">
+                        <div class="slider-markers">
+                            <span>0.0</span>
+                            <span>0.5</span>
+                            <span>1.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    Classificar Cerveja
+                </button>
+            </form>
+
+            <div class="error-message" id="errorMessage"></div>
+
+            <div class="result-container" id="resultContainer">
+                <div class="foam-animation" id="foamAnimation"></div>
+                <div class="result-card" id="resultCard">
+                    <div class="result-icon" id="resultIcon">🍺</div>
+                    <div class="result-title">Resultado da Classificação</div>
+                    <div class="prediction-text" id="predictionText"></div>
+
+                    <div class="business-message" id="businessMessage">
+                        <h3 id="businessTitle"></h3>
+                        <div id="businessContent"></div>
+                    </div>
+
+                    <div class="probabilities">
+                        <div class="prob-item good">
+                            <div class="prob-label">Probabilidade: Boa</div>
+                            <div class="prob-value" id="probGood">0%</div>
+                        </div>
+                        <div class="prob-item bad">
+                            <div class="prob-label">Probabilidade: Ruim</div>
+                            <div class="prob-value" id="probBad">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="text-align:center; margin-top:40px; color:rgba(255,255,255,0.6)">
+        Sistema experimental de apoio à decisão baseado em Machine Learning • Projeto Acadêmico
+    </footer>
+
+
+    <script>
+        // ============================================
+        // CONFIGURAÇÃO DA API
+        // ============================================
+        const API_URL = 'http://localhost:8000/api/predict';
+
+        // ============================================
+        // ATUALIZAÇÃO DOS VALORES DOS SLIDERS
+        // ============================================
+        const sliders = [
+            { input: 'aroma', display: 'aromaValue' },
+            { input: 'appearance', display: 'appearanceValue' },
+            { input: 'palate', display: 'palateValue' },
+            { input: 'taste', display: 'tasteValue' },
+            { input: 'abv', display: 'abvValue' }
+        ];
+
+        sliders.forEach(slider => {
+            const input = document.getElementById(slider.input);
+            const display = document.getElementById(slider.display);
+
+            input.addEventListener('input', (e) => {
+                display.animate([{ opacity: 0.3 }, { opacity: 1 }], { duration: 200 });
+                display.textContent = parseFloat(e.target.value).toFixed(2);
+
+            });
+        });
+
+        // ============================================
+        // SUBMISSÃO DO FORMULÁRIO
+        // ============================================
+        document.getElementById('beerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Ocultar resultado anterior e erros
+            resultContainer.classList.remove('show');
+            errorMessage.classList.remove('show');
+
+            // Desabilitar botão e mostrar loading
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '🧠 Analisando com IA...';
+
+
+            // Coletar valores do formulário
+            const data = {
+                review_aroma: parseFloat(document.getElementById('aroma').value),
+                review_appearance: parseFloat(document.getElementById('appearance').value),
+                review_palate: parseFloat(document.getElementById('palate').value),
+                review_taste: parseFloat(document.getElementById('taste').value),
+                beer_abv: parseFloat(document.getElementById('abv').value)
+            };
+
+            // Validação adicional (garantir valores entre 0 e 1)
+            for (const [key, value] of Object.entries(data)) {
+                if (value < 0 || value > 1) {
+                    showError(`Valor inválido para ${key}: deve estar entre 0 e 1`);
+                    resetButton();
+                    return;
+                }
+            }
+
+            try {
+                // Fazer requisição para a API
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail?.message || 'Erro ao processar requisição');
+                }
+
+                const result = await response.json();
+
+                setTimeout(() => {
+                    displayResult(result);
+                }, 1200);
+
+
+
+            } catch (error) {
+                console.error('Erro:', error);
+                showError(`Erro ao classificar cerveja: ${error.message}`);
+            } finally {
+                resetButton();
+            }
+        });
+
+        // ============================================
+        // FUNÇÕES AUXILIARES
+        // ============================================
+        function displayResult(result) {
+            const resultContainer = document.getElementById('resultContainer');
+            const foamAnimation = document.getElementById('foamAnimation');
+            const resultCard = document.getElementById('resultCard');
+            const resultIcon = document.getElementById('resultIcon');
+            const predictionText = document.getElementById('predictionText');
+            const probGood = document.getElementById('probGood');
+            const probBad = document.getElementById('probBad');
+            const businessMessage = document.getElementById('businessMessage');
+            const businessTitle = document.getElementById('businessTitle');
+            const businessContent = document.getElementById('businessContent');
+
+            // Determinar classe (good/bad)
+            const isGood = result.prediction === 'Boa';
+            resultCard.className = `result-card ${isGood ? 'good' : 'bad'}`;
+            businessMessage.className = `business-message ${isGood ? 'good' : 'bad'}`;
+
+            // Atualizar ícone
+            resultIcon.textContent = isGood ? '🏆' : '⚠️';
+
+            // Atualizar texto da predição
+            predictionText.textContent = `Cerveja ${result.prediction}`;
+            predictionText.className = `prediction-text ${isGood ? 'good' : 'bad'}`;
+
+            // Atualizar probabilidades
+            if (result.probabilities) {
+                probGood.textContent = (result.probabilities.Boa * 100).toFixed(1) + '%';
+                probBad.textContent = (result.probabilities.Ruim * 100).toFixed(1) + '%';
+            } else {
+                probGood.textContent = result.prediction === 'Boa' ? '—' : '—';
+                probBad.textContent = result.prediction === 'Ruim' ? '—' : '—';
+            }
+
+
+           
+
+            // Mensagem de negócio
+            if (isGood) {
+                businessTitle.innerHTML = '💰 Excelente Potencial de Mercado!';
+                businessContent.innerHTML = `
+                    <p>Parabéns! Esta cerveja apresenta características excepcionais que a tornam altamente competitiva no mercado premium.</p>
+                    <ul>
+                        <li><strong>Posicionamento Premium:</strong> Características superiores permitem precificação acima da média do mercado</li>
+                        <li><strong>Fidelização de Clientes:</strong> Alta qualidade gera recomendações espontâneas e clientes recorrentes</li>
+                        <li><strong>Diferenciação:</strong> Destaque em concursos e avaliações especializadas</li>
+                        <li><strong>Expansão:</strong> Potencial para exportação e parcerias com distribuidores premium</li>
+                        <li><strong>Marketing:</strong> Use estas métricas em campanhas para atrair público exigente</li>
+                    </ul>
+                `;
+            } else {
+                businessTitle.innerHTML = '📊 Oportunidades de Melhoria';
+                businessContent.innerHTML = `
+                    <p>Esta cerveja precisa de ajustes para competir efetivamente no mercado. Aqui estão estratégias para otimizar o produto:</p>
+                    <ul>
+                        <li><strong>Análise Sensorial:</strong> Realize testes cegos com consumidores-alvo para identificar pontos fracos específicos</li>
+                        <li><strong>Controle de Qualidade:</strong> Revise temperatura de fermentação, tempo de maturação e qualidade das matérias-primas</li>
+                        <li><strong>Benchmarking:</strong> Compare com cervejas bem-sucedidas do mesmo estilo para identificar gaps</li>
+                        <li><strong>Consultoria Especializada:</strong> Considere contratar um mestre cervejeiro para otimizar a receita</li>
+                        <li><strong>Testes Iterativos:</strong> Faça pequenos ajustes, teste novamente e meça a evolução das métricas</li>
+                        <li><strong>Posicionamento:</strong> Enquanto melhora, foque em nichos menos exigentes ou preço competitivo</li>
+                    </ul>
+                `;
+            }
+
+            // Reiniciar animação de espuma
+            foamAnimation.style.animation = 'none';
+            setTimeout(() => {
+                foamAnimation.style.animation = '';
+            }, 10);
+
+            // Mostrar resultado com animação
+            resultContainer.classList.add('show');
+
+            // Scroll suave até o resultado
+            setTimeout(() => {
+                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+        }
+
+        function resetButton() {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Classificar Cerveja';
+        }
+    </script>
+</body>
+
+</html>
