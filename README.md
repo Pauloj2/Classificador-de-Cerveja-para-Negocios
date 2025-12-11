@@ -1,197 +1,126 @@
-# 🍺 Sistema de Classificação de Cervejas
+<img width="1003" height="565" alt="image" src="https://github.com/user-attachments/assets/23110086-c5f6-457e-9ab8-b8ab490bbcea" />
 
-Sistema web completo para classificação de cervejas usando Machine Learning com modelo PMML.
 
-## 📋 Pré-requisitos
+# 🍺 Beer Analytics – Classificação Inteligente de Cervejas
+Sistema Web + Modelo de Machine Learning para Análise de Qualidade
+📌 Descrição Geral
 
-- Python 3.8 ou superior
-- pip (gerenciador de pacotes Python)
-- Navegador web moderno
+O Beer Analytics é um projeto acadêmico que integra Machine Learning e desenvolvimento web para criar um sistema capaz de classificar cervejas como “Boa” ou “Ruim” com base em avaliações sensoriais e características químicas.
 
-## 🚀 Instalação e Execução
+O objetivo é demonstrar como a inteligência artificial pode apoiar negócios do setor cervejeiro, oferecendo suporte à tomada de decisão e ao controle de qualidade.
 
-### 1. Estrutura de Pastas
+## 🎯 Objetivo do Projeto
 
-Organize seu projeto com a seguinte estrutura:
+O projeto foi desenvolvido com duas entregas principais:
 
-```
-beer-classifier/
-│
-├── app.py                          # Backend FastAPI
-├── requirements.txt                # Dependências Python
-├── README.md                       # Este arquivo
-│
-├── models/
-│   └── random_forest_cervejas.pmml # Seu modelo PMML (COLOQUE AQUI!)
-│
-└── static/
-    └── index.html                  # Frontend (interface web)
-```
+Modelagem em Machine Learning (KNIME)
 
-### 2. Instalar Dependências
+Sistema Web para classificação em tempo real
 
-Abra o terminal na pasta do projeto e execute:
+O sistema permite que usuários insiram valores normalizados e recebam:
 
-```bash
-pip install -r requirements.txt
-```
+Classificação da cerveja
 
-### 3. Configurar o Modelo PMML
+Probabilidades associadas
 
-**IMPORTANTE:** Coloque seu arquivo PMML na pasta `models/` com o nome `random_forest_cervejas.pmml`
+Insights de negócio gerados automaticamente
 
-Se seu arquivo tiver outro nome ou localização, edite a linha 22 do arquivo `app.py`:
+## 🧠 Machine Learning
 
-```python
-PMML_MODEL_PATH = "models/SEU_ARQUIVO.pmml"  # Altere aqui
-```
+A modelagem foi realizada no KNIME Analytics Platform, passando por:
 
-### 4. Iniciar o Backend
+Pré-processamento e normalização dos dados
 
-No terminal, execute:
+Análise exploratória
 
-```bash
-python app.py
-```
+Teste e comparação de algoritmos supervisionados
 
-Você verá uma mensagem como:
+Algoritmos avaliados
 
-```
-✅ Modelo PMML carregado com sucesso de: models/random_forest_cervejas.pmml
-🚀 Iniciando servidor em http://localhost:8000
-```
+Decision Tree
 
-**Deixe este terminal aberto!** O backend precisa estar rodando.
+Random Forest
 
-### 5. Abrir o Frontend
+SVM
 
-Abra o arquivo `static/index.html` no seu navegador web ou configure um servidor local:
+KNN
 
-```bash
-# Opção 1: Abrir diretamente
-# Navegue até a pasta static/ e abra index.html no navegador
+MLP
 
-# Opção 2: Usar servidor HTTP simples do Python (recomendado)
-cd static
-python -m http.server 8080
-# Acesse: http://localhost:8080
-```
+Modelo escolhido
 
-## 🎯 Como Usar
+✔ Random Forest — apresentou o melhor desempenho (acurácia e Kappa).
 
-1. **Ajuste os valores** usando os sliders:
-   - Aroma (0 a 1)
-   - Aparência (0 a 1)
-   - Paladar (0 a 1)
-   - Sabor (0 a 1)
-   - Teor Alcoólico/ABV (0 a 1)
+## 📊 Visualizações Incluídas
 
-2. **Clique em "Classificar Cerveja"**
+As seguintes visualizações foram geradas para análise dos padrões da base de dados:
 
-3. **Veja o resultado:**
-   - Classificação: "Cerveja Boa" ou "Cerveja Ruim"
-   - Probabilidades de cada classe
+Histograma
 
-## ⚙️ Sobre a Normalização
+Scatter Plot
 
-**IMPORTANTE:** Este sistema espera valores **já normalizados** entre 0 e 1, pois o modelo foi treinado com dados nessa escala.
+Pie Chart
 
-### Se você quiser usar valores originais (não normalizados):
+Coordenadas Paralelas
 
-Por exemplo, se ABV original era em porcentagem (0% a 30%):
+Esses gráficos facilitam a compreensão da distribuição das classes e atributos sensoriais.
 
-1. Edite o arquivo `app.py`
-2. Adicione uma função de normalização antes da predição:
+## 🌐 Sistema Web
 
-```python
-def normalize_abv(abv_percent):
-    """Converte ABV de % para escala 0-1"""
-    return abv_percent / 30.0  # Assumindo máximo de 30%
+A interface web foi criada para demonstrar a aplicação prática do modelo selecionado.
 
-# Use na função de predição:
-input_data = {
-    'beer_abv': normalize_abv(features.beer_abv),  # Se receber em %
-    # ... outros campos
-}
-```
+Funcionalidades principais
 
-3. Ajuste o frontend para aceitar valores em % (alterar `max` dos sliders)
+Ajuste de valores por meio de sliders
 
-## 🔧 Endpoints da API
+Envio dos dados para uma API
 
-### GET /
-- Informações gerais da API
+Exibição da classificação (“Boa” ou “Ruim”)
 
-### GET /health
-- Health check (verifica se modelo está carregado)
+Exibição da probabilidade de cada classe
 
-### POST /api/predict
-- **Rota de predição**
-- Body (JSON):
-```json
-{
-  "review_aroma": 0.85,
-  "review_appearance": 0.90,
-  "review_palate": 0.75,
-  "review_taste": 0.88,
-  "beer_abv": 0.15
-}
-```
-- Response:
-```json
-{
-  "prediction": "Boa",
-  "probabilities": {
-    "Boa": 0.913,
-    "Ruim": 0.087
-  }
-}
-```
+Mensagens estratégicas para o mercado cervejeiro (insights de negócio)
 
-## 📚 Documentação Interativa
+## 💼 Aplicações Reais
 
-Acesse a documentação Swagger da API em:
-```
-http://localhost:8000/docs
-```
+O projeto pode ser aplicado como base para:
 
-## 🐛 Solução de Problemas
+Controle de qualidade sensorial
 
-### Erro: "Modelo PMML não disponível"
-- Verifique se o arquivo PMML existe na pasta `models/`
-- Confirme o nome do arquivo em `app.py` (linha 22)
+Benchmark entre marcas e estilos
 
-### Erro: "Connection refused" no frontend
-- Certifique-se que o backend está rodando (`python app.py`)
-- Verifique se está na porta correta (8000)
+Desenvolvimento e ajustes de receitas
 
-### Erro: "CORS policy"
-- O backend já está configurado para aceitar requisições de qualquer origem
-- Se persistir, verifique se ambos estão na mesma rede
+Análises estratégicas de mercado
 
-## 🎨 Personalização
+Apoio a decisões de precificação e portfólio
 
-### Alterar cores do frontend
-Edite as variáveis CSS em `index.html`:
-- `#C68A24` - Dourado escuro
-- `#F2C14E` - Dourado claro
-- `#1F1F1F` - Cinza escuro
-- `#4CAF50` - Verde (cerveja boa)
-- `#F44336` - Vermelho (cerveja ruim)
+## 🚀 Tecnologias Utilizadas
 
-### Alterar porta do backend
-Em `app.py`, linha final:
-```python
-uvicorn.run(app, host="0.0.0.0", port=NOVA_PORTA)
-```
+KNIME Analytics Platform – Pré-processamento, modelagem e avaliação
 
-## 📝 Licença
+PMML – Exportação do modelo
 
-Projeto educacional - livre para uso e modificação.
+Python (API) – Consumo do modelo e predição
 
-## 🤝 Suporte
+HTML, CSS, JavaScript – Interface web
 
-Se encontrar problemas:
-1. Verifique os logs do terminal onde o backend está rodando
-2. Abra o Console do navegador (F12) para ver erros do frontend
-3. Confirme que todas as dependências foram instaladas corretamente
+Fetch API – Comunicação entre o front-end e a API
+
+📁 Estrutura do Projeto
+📦 Beer-Analytics
+ ├── 📂 api/           → API de previsão usando o modelo PMML
+ ├── 📂 web/           → Interface web do classificador
+ ├── 📂 img/           → Gráficos e visualizações do KNIME
+ ├── Modelo.pmml       → Modelo Random Forest exportado
+ └── README.md
+
+## 👨‍💻 Autor
+
+Projeto desenvolvido para fins acadêmicos, unindo:
+
+Analise exploratória de dados
+
+Modelagem supervisionada
+
+Desenvolvimento de sistemas web aplicados ao mercado cervejeiro
