@@ -26,29 +26,28 @@ app.add_middleware(
 # CONFIGURAÇÃO DO MODELO PMML
 # ============================================
 # ALTERE AQUI o caminho do seu arquivo PMML
-PMML_MODEL_PATH = "models/random_forest_cervejas.pmml"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PMML_MODEL_PATH = os.path.join(BASE_DIR, "models", "random_forest_cervejas.pmml")
+
 
 # Variável global para armazenar o modelo carregado
 pmml_model = None
 
 
 def load_pmml_model():
-    """
-    Carrega o modelo PMML na inicialização da aplicação.
-    Se o arquivo não existir, a API retornará erro ao tentar fazer predições.
-    """
     global pmml_model
     
+    print(f"📁 Tentando carregar modelo em: {PMML_MODEL_PATH}")
+
     if not os.path.exists(PMML_MODEL_PATH):
-        print(f"⚠️  AVISO: Arquivo PMML não encontrado em: {PMML_MODEL_PATH}")
-        print("   A API iniciará, mas predições falharão até que o modelo seja fornecido.")
+        print("❌ Modelo NÃO encontrado no caminho real dentro do container.")
         return
     
     try:
         pmml_model = Model.load(PMML_MODEL_PATH)
-        print(f"✅ Modelo PMML carregado com sucesso de: {PMML_MODEL_PATH}")
+        print(f"✅ Modelo PMML carregado com sucesso!")
     except Exception as e:
-        print(f"❌ Erro ao carregar modelo PMML: {str(e)}")
+        print(f"❌ Erro ao carregar modelo PMML: {e}")
 
 
 # Carregar modelo na inicialização
