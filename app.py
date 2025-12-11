@@ -249,20 +249,17 @@ async def predict_beer_quality(features: BeerFeatures):
         )
 
 
-# ============================================
-# EXECUÇÃO DA APLICAÇÃO
-# ============================================
-
 if __name__ == "__main__":
     import uvicorn
+    
+    port = int(os.environ.get("PORT", 8000))
     
     print("=" * 60)
     print("🍺 Beer Classifier API")
     print("=" * 60)
     print(f"📁 Caminho do modelo PMML: {PMML_MODEL_PATH}")
-    print("🚀 Iniciando servidor em http://localhost:8000")
-    print("📖 Documentação: http://localhost:8000/docs")
+    print(f"🚀 Iniciando servidor em http://0.0.0.0:{port}")
+    print(f"📖 Documentação: http://0.0.0.0:{port}/docs")
     print("=" * 60)
     
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-    
+    uvicorn.run(app, host="0.0.0.0", port=port)
